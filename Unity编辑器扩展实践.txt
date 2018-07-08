@@ -1,0 +1,106 @@
+﻿##经典成熟插件：
+	Behaviour Designer
+	Build Report
+	PSD2UGUI
+
+##Unity项目工程默认目录名
+StreamingAssets目录 #资源不会压缩
+Editor Default Resources #Unity默认的EditorUtility.Load获取资源路径 默认的内置资源貌似也在里面
+可用过EditorUtility.Load之类的api获取内置资源
+Gizmos #给特定的gameobject显示指定的icon Gizmon.DrawIcon接口的默认路径
+
+####Unity编辑器之基础篇
+##Unity C#脚本基础
+#warning #error #怎么用。。
+委托：类型安全的函数指针类 delegate+函数声明
+反射 编辑器很多扩展功能都会用到反射
+Attribute #有待往深处研究
+
+####Unity编辑器之存储篇
+#Unity GUI
+
+#Unity MenuItem 
+ContextMenuItem用于放在属性上 然后两个参数 第二个参数指定要调用的ContextMenu
+#Hierarchy 	[MenuItem("GameObject/meunItemInstance")]
+#Project  	[MenuItem("Assets/meunItemInstance")]
+
+#MenuItemWindow（EditorWindow GenericMenu）
+
+#UnityEditorWindow(单独面板显示按钮及操作 用Attribute反射生成点击并自动响应相关接口)
+
+#Unity序列化存储(ScriptObject)和编辑器Inspector显示扩展
+	#Inspector
+	Dictionary的序列化（可自定义序列化）
+	自定义Inspector PropertyDrawer(还要利用CustomerPropertyDrawer做绑定)结合自定义Attribute做自定义Inspector绘制
+	CanEditMultipleObjects标记该脚本可以一次性编辑多个
+	Inspector的OnSceneGUI绘制Scene视图中的UI表现 主要辅助类Handles具体Editor的编辑 特别是Scene里的辅助编辑可以参考C# Tutorial那篇国外教程里面的用法案例蛮多
+
+	#ScriptObject
+	Unity内置的一种序列化数据的方式
+	
+
+#写编辑器工具常用到的类
+AssetDatabase
+EditorApplication
+EditorUtility
+Selection
+
+####Unity编辑器之窗口篇
+#Hierarchy窗口扩展
+	[InitializeOnLoad](貌似还有个StartOnLoad标签)
+	EditorApplication.hierarchyWindowItemOnGUI（绘制事件）
+	EditorApplication.hierarchyWindowChanged（窗口变更事件）
+	一般用于特有脚本或含有特有逻辑的gameobject上绘制一个指定图标之类的（Prefab和Hierarchy都可以显示）
+#Project窗口扩展
+	EditorApplication.projectWindowChanged
+	EditorApplication.projectWindowItemOnGUI
+	EditorApplication.playmodeStateChanged
+	EditorApplication.modifierKeysChanged 当用户按键按下时
+#Scene窗口扩展
+	Editor.OnSceneGUI(当前选中物体)
+	SceneView SceneView.onSceneGUIDelegate += -=
+#自定义视图窗口
+	#EditorWindow
+		主要消息生命周期函数
+		OnDestroy
+		OnFocus
+		OnHierarchyChange
+		OnSelectionChange
+		OnProjectChange
+		OnInspectorUpdate
+		Update
+		OnGUI
+		函数：
+		BeginWindows/EndWindows
+		Focus
+		Close
+		ShowNotification/RemoveNotification
+		Repaint
+		Show/ShowAsDropDown/ShowPopup/ShowUtility
+	#PopupWindow 弹出窗
+	#Buildin Skin 各种系统内置控件style 类似NGUI提供了一些自带的UI 不用自己去写相关的控件	
+
+
+###Unity编辑器之资源篇(AssetBundle Assets)
+	#AssetPostProcessor 资源导入操作
+	#AssetImporter 修改属性后利用AssetDatabase.ImportAsset重新导入刷新
+	#AssetModificationProcessor
+	#Undo Redo
+
+	#AssetBundle 4.x
+	#AssetBundle的坑
+	WWW加载会产生大量的webstream 用完后记得dispose webstream assets institate
+	LoadFromCacheOrDownload页游时代遗留产物。加载出的资源释放出来（应该是指Load出来）后会出现占用加倍的情况 1M-10M
+	CreateFromFile虽然快 但非压缩要求注定不可能大量使用（加载最快）
+	
+	#AssetBundle 5.x
+	#新增加载API AssetBundle.LoadFromFile(Async)加载压缩资源（推荐）
+	依赖关系收集变化：自动处理依赖关系，存入manifest文件
+	#Bundle压缩格式
+		Uncompressed：最大但是可以最快速度加载
+		LZMA（Default）：流式压缩，最高压缩，加载需要内存解压
+		LZ4：新方式，索引分块压缩（貌似边加载，边解压的方式），比LZMA方式差
+		
+	
+	
+
